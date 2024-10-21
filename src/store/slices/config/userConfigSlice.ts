@@ -2,13 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface userConfigInterface {
     userLoggedIn : boolean
-    userSession : userSessionInterface
+    userSession : userSessionInterface | undefined
 }
 
 interface userSessionInterface {
     name : string | undefined | null
     email: string | undefined | null
-    image: string | undefined | null
+    password?: string | undefined | null
+    image?: string | undefined | null
+    userLoggedIn : boolean | undefined | null
 }
 
 const initialState : userConfigInterface = {
@@ -16,7 +18,9 @@ const initialState : userConfigInterface = {
     userSession : {
         name : undefined,
         email : undefined,
+        password: undefined,
         image : undefined,
+        userLoggedIn : false
     }
 }
 
@@ -30,6 +34,7 @@ const userConfigSlice = createSlice({
         },
         logOutSession : (state) => {
             state.userLoggedIn = false
+            state.userSession?.userLoggedIn == false
         }
     }
 })

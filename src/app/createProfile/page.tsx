@@ -1,6 +1,6 @@
 "use client"
 import { useForm, SubmitHandler } from "react-hook-form"
-import { Inputs } from "../(lib)/types/type"
+import { Inputs } from "../../types/type"
 
 export default function CreateProfile() {
   const {

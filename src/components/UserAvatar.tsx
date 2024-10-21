@@ -1,22 +1,20 @@
+"use client"
 import React from 'react'
-import { auth } from '../../auth'
 import Image from 'next/image'
 import UserIcon from "../public/userIcon.png"
+import { useSession } from 'next-auth/react'
 
-const UserAvatar = async () => {
-    const session = await auth()
+const UserAvatar =  () => {
+    const {data: session} = useSession()
     console.log(session)
-    if(!session?.user) return null
   return (
     <div className='flex justify-center items-center ml-2'>
-        {session?.user && (
-           <Image
-             width={30}
-             height={30}
-             className='rounded-full'
-             src={session.user.image || UserIcon}
-             alt='DP'/>
-        )}
+      <Image
+        width={30}
+        height={30}
+        className='rounded-full'
+        src={session?.user.image || UserIcon}
+        alt='uIcon'/>
     </div>
   )
 }

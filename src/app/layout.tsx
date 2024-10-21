@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "../components/Navbar";
-import { StoreProvider } from "./(lib)/redux/StoreProvider";
-import NavbarClient from "../components/NavbarClient";
+import { StoreProvider } from "../store/redux/StoreProvider";
 import { SessionProvider } from "next-auth/react";
 
 const geistSans = localFont({

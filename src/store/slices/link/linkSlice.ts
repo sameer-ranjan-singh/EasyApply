@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { linkInterface } from "@/app/(lib)/types/type";
+import { linkInterface } from "@/types/type";
 import { RootState } from "@/store/store";
 
 const initialState: linkInterface = {

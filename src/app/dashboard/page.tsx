@@ -1,28 +1,44 @@
 "use client"
-import { useState } from "react"
-import ClientSideRendered from "../../components/csr"
+import { useEffect, useState } from "react"
 import InputLink from "../../components/InputLink"
-import { useAppDispatch, useAppSelector } from "../(lib)/redux/useReduxTypeHooks"
+import { useAppDispatch, useAppSelector } from "../../store/redux/useReduxTypeHooks"
 import { addLinks } from "@/store/slices/link/linkSlice"
-import { linkInterface } from "../(lib)/types/type"
-import useRedirect from "@/hooks/useRedirect"
+import { linkInterface } from "../../types/type"
 import btnBeforeCopy from "../../public/copyBefore.svg"
 import btnAfterCopy from "../../public/copyAfter.svg"
-// import btnAfterCopy 
+import { useSession } from "next-auth/react"
+import { addSession } from "@/store/slices/config/userConfigSlice"
 
 export default function DashboardPage() {
-  useRedirect()
 
   const dispatch = useAppDispatch()
-  const userConfig = useAppSelector((store) => store.userConfig)
-  const linkInfo = useAppSelector((store)=> store.link)
-
+  const {data: session} = useSession()
   const [isCopied,setIsCopied] = useState(false)
+  const linkInfo = useAppSelector((store)=> store.link)
+  const nameInStore = useAppSelector((store) => store.userConfig?.userSession?.name)
+
   const [links, setLinks] = useState<linkInterface>({
     github : "",
     twitter : "",
     portfolio : "",
   })
+  
+  const fillStoreUsingSession = ()=> {
+    if(session?.user?.name ){
+      session.user.userLoggedIn = true
+      const {name , email, image} = session.user
+      dispatch(addSession({
+        userLoggedIn: true,
+        userSession: {
+          name: name,
+          email: email,
+          image: image,
+          password: undefined,
+          userLoggedIn : true,
+        }
+      }))
+    }
+  }
   
   const handleOnChange = (field: keyof linkInterface, event: React.ChangeEvent<HTMLInputElement>) => {
     setLinks({ ...links, [field]: event.target.value });
@@ -45,11 +61,17 @@ export default function DashboardPage() {
       portfolio: links.portfolio,
     }))
   }
+
+  useEffect(() => {
+    if(session?.user.name){
+        fillStoreUsingSession()
+      }
+  },[session])
+
     return (
       <>
-      <ClientSideRendered/>
          <div className="text-center flex flex-col md:m-0 mx-5 my-2 md:w-1/2 w-full">
-          <h1 className="font-bold md:font-extrabold capitalize my-[10%] text-lg md:text-4xl text-blue-700"># {userConfig.userSession.name}</h1>
+          <h1 className="font-bold md:font-extrabold capitalize my-[10%] text-lg md:text-4xl text-blue-700"># {nameInStore}</h1>
           <div className="flex flex-col gap-5">
             <InputLink
               value={links.github}

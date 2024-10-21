@@ -1,165 +1,58 @@
-"use client"
-import Link from "next/link";
-import { useRef, useState } from "react";
-import ClientSideRendered from "../../components/csr";
-import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../(lib)/redux/useReduxTypeHooks";
-import { addUser } from "@/store/slices/user/userSlice";
-import {useForm, SubmitHandler} from "react-hook-form"
-import { userInterface } from "../(lib)/types/type";
+import { redirect  } from "next/navigation";
+import { signIn } from "../../../auth"; 
+import { AuthError } from "next-auth";
+import { providerMap } from "../../../auth";
+import { providers } from "../../../auth";
+import CredentialSignup from "@/components/CredentialSignup";
 
-function Signup() {
-  const [isSignInForm, setIsSignInForm] = useState(false);
+function Signup(props: {
+  searchParams: { callbackUrl: string | undefined }
+}) {
 
-  const dispatch = useAppDispatch()
-  const userFromStore = useAppSelector((store)=> store.user)
-  const router = useRouter()
-  
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-
-  
-  const {
-    register,
-    handleSubmit,
-    formState :{errors},
-    
-  } = useForm<userInterface>()
-  
-  const onSubmit: SubmitHandler<userInterface> = (data) =>{
-    console.log("Form submitted data",data)
-    const userdispatch = dispatch(addUser({
-      id:`${Math.floor(Math.random()*100)}`,
-      name:data.name,
-      password:data.password,
-      email:data.email
-    }))
-
-    console.log("userFromStore-after :",userFromStore)
-    console.log("userdispatch :",userdispatch)
-    router.replace("./dashboard")
-  }
-  console.log("rendered")
-
-
-  const toggleSign = () => {
-    setIsSignInForm(!isSignInForm);
-  };
-
-  const name = nameRef.current?.value
-  const password = passwordRef.current?.value
-  const email = emailRef.current?.value
-
-  const handleButtonClick = () => {
-
-    const userdispatch = dispatch(addUser({
-      id:"Math.floor(Math.random()*100)",
-      name:name,
-      password:password,
-      email:email
-    }))
-
-    console.log("userFromStore-after :",userFromStore)
-    console.log("userdispatch :",userdispatch)
-    router.replace("./dashboard")
-  };
-
-
+  const SIGNIN_ERROR_URL = "/signup"
+  console.log("providers :",providers)
   return (
     <>
-      <div className="bg-slate-200 shadow-lg">
-       <ClientSideRendered/>
-        <form onSubmit={handleSubmit(onSubmit)}
-          className="h-screen w-screen md:w-4/12 p-4 md:p-14 md:mx-auto left-0 right-0 text-black bg-opacity-90"
-        >
-          <h1 className="text-2xl md:text-3xl font-bold py-4 ">
-            {isSignInForm ? "Sign In" : "Sign Up"}
+      <div className="">
+        <div className="flex justify-center items-center flex-col my-3">
+          <h1 className="text-2xl md:text-3xl font-bold pb-8 ">
+             Sign Up to Easily Apply
           </h1>
-          <div>
-            {!isSignInForm && (
-              <input {...register("name",{required:true})}
-                // ref={nameRef}
-                type="text"
-                placeholder="Full Name"
-                className="my-2 px-4 py-3 w-full bg-transparent text-black border border-neutral-700 rounded-sm"
-              />
-            )}
-            {errors.name && <span className="text-red-700 font-bold  my-2">This field is required</span>}
-            <input
-              {...register("email",{required:true})}
-              // ref={emailRef}
-              type="text"
-              placeholder="Email"
-              className="my-2 px-4 py-3 w-full bg-transparent text-black border border-neutral-700 rounded-sm"
-            />
-            {errors.email && <span className="text-red-700 font-bold  my-2">This field is required</span>}
-
-            <input
-              {...register("password",{required:true})}
-              // ref={passwordRef}
-              type="password"
-              placeholder="Password"
-              className="my-2 px-4 py-3 w-full bg-transparent text-black border border-neutral-700 rounded-sm "
-            />
-            {errors.password && <span className="text-red-700 font-bold  my-2">This field is required</span>}
-            
-
-            <button
-              type="submit"
-              // onClick={handleButtonClick}
-              className="bg-blue-700  hover:bg-blue-600 text-white p-2 rounded-md  font-bold  w-full"
-            >
-                {isSignInForm ? "Sign In" : "Sign Up"}
+         {Object.values(providerMap).map((provider) => (
+          <form
+            className="w-10/12 md:w-4/12 p-1 md:mx-auto left-0 right-0 text-black bg-opacity-90"
+            action={async () => {
+            "use server"
+            try {
+                await signIn(provider.id, {
+                redirectTo: props.searchParams?.callbackUrl ?? "/dashboard",
+              })
+            } catch (error) {
+              if (error instanceof AuthError) {
+                return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
+              }
+              throw error
+            }
+            }}
+          >
+            <button 
+              className="bg-slate-200 text-black hover:bg-slate-300  p-2 rounded-md font-bold w-full"
+              type="submit">
+               <span>Sign in with {provider.name}</span>
             </button>
+          </form>
+        ))}
+      </div>
+      
+        <div className="flex justify-center items-center">
+          <span>Or</span>
+        </div> 
 
-            {isSignInForm ? (
-              <>
-                <h1 className=" m-4 text-md md:text-xl text-black text-center">
-                  OR
-                </h1>
-                <button className="mt-2 p-2 w-full bg-stone-600  bg-opacity-50 text-bold rounded-sm font-bold ">
-                  Use a sign-in code
-                </button>
-              </>
-            ) : null}
-            <Link className="m-2" href={"/"}>
-              <h1 className="text-center hover:underline font-semibold">
-                Forgot password ?
-              </h1>
-            </Link>
-          </div>
-          <div>
-            <input type="checkbox" className="mx-2 size-4" />
-            <label className=" ">Remember me ?</label>
-          </div>
-          {isSignInForm ? (
-            <h1 className="mx-2 my-4 text-stone-500 ">
-              New to Easyply?
-              <span
-                className="font-bold hover:underline cursor-pointer text-black"
-                onClick={toggleSign}
-              >
-                {" "}
-                Sign Up Now !
-              </span>
-            </h1>
-          ) : (
-            <h1 className="mx-2 my-4 text-stone-500">
-              Already have an account?
-              <span
-                className="font-bold hover:underline cursor-pointer text-black"
-                onClick={toggleSign}
-              >
-                {" "}
-                Login !
-              </span>
-            </h1>
-          )}
-        </form>
+       <CredentialSignup/>
+
       </div>
     </>
-  );
+  )
 }
 
 export default Signup;

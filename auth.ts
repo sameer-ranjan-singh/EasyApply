@@ -1,21 +1,28 @@
-import NextAuth from "next-auth"
+import NextAuth, {type DefaultSession} from "next-auth"
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google"
-import Credentials from "next-auth/providers/credentials"
 import type { Provider } from "next-auth/providers"
+import Credentials from "next-auth/providers/credentials";
 
-const providers: Provider[] = [
-  Credentials({
-    credentials: { password: { label: "Password", type: "password" } },
-    authorize(c) {
-      if (c.password !== "password") return null
-      return {
-        id: "test",
-        name: "Test User",
-        email: "test@example.com",
-      }
-    },
-  }),
+declare module "next-auth" {
+  /**
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: {
+      /** The user's postal address. */
+      userLoggedIn: boolean
+      /**
+       * By default, TypeScript merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"]
+  }
+}
+
+export const providers: Provider[] = [
   GitHubProvider({
     clientId: process.env.GITHUB_ID,
     clientSecret: process.env.GITHUB_SECRET
@@ -24,8 +31,13 @@ const providers: Provider[] = [
     clientId: process.env.NEXT_AUTH_GOOGLE_CLIENT_ID,
     clientSecret: process.env.NEXT_AUTH_GOOGLE_CLIENT_SECRET
   }),
+  Credentials({
+    async authorize(credentials) {
+      return { ...credentials }
+    },
+  }),
 ]
- 
+
 export const providerMap = providers.map((provider) => {
   if (typeof provider === "function") {
     const providerData = provider()
@@ -39,20 +51,20 @@ export const providerMap = providers.map((provider) => {
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers,
   pages:{
-    signIn:"/src/app/signup"
-  }
+    signIn:"../../signup"
+  },
+  callbacks: {
+    session({ session }) {
+    // session({ session,token, user }) {
+      // `session.user.address` is now a valid property, and will be type-checked
+      // in places like `useSession().data.user` or `auth().user`
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          userLoggedIn: false
+        },
+      }
+    },
+  },
 })
-
-/*
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers:  [
-  GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET
-    }),
-    GoogleProvider({
-      clientId: process.env.NEXT_AUTH_GOOGLE_CLIENT_ID,
-      clientSecret: process.env.NEXT_AUTH_GOOGLE_CLIENT_SECRET
-    })
-]})
-*/
