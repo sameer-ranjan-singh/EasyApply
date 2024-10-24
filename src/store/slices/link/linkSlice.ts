@@ -5,13 +5,13 @@ import { RootState } from "@/store/store";
 const initialState: linkInterface = {
     id: undefined,
     userID: undefined,
-    portfolio: undefined,
-    linkedin: undefined,
-    twitter: undefined,
-    github: undefined,
-    discord: undefined,
-    reddit: undefined,
-    leetcode: undefined
+    portfolio: "https://sameer-campus.netlify.app",
+    linkedin: "",
+    twitter: "",
+    github: "",
+    discord: "",
+    reddit: "",
+    leetcode: ""
 }
 
 const linkSlice = createSlice({
