@@ -1,13 +1,13 @@
 "use client"
 import React, { useState } from 'react'
 import Image from 'next/image'
-import copy from "../public/copy.png"
-import btnAfterCopy from "../public/copyAfter.svg"
+import beforeCopyIcon from "../public/copyBefore.png"
+import afterCopyIcon from "../public/copyAfter.png"
 import { useAppSelector } from '@/store/redux/useReduxTypeHooks'
 
 const CopyButton = ({linkKey}:{linkKey:string}) => {
-  const [isCopied,setIsCopied] = useState(false)
   const linkStore = useAppSelector((store)=> store.link)
+  const [isCopied , setIsCopied] = useState(false)
   
  const text = linkStore[linkKey as keyof typeof linkStore] || "default-sameer"
 
@@ -28,7 +28,7 @@ const CopyButton = ({linkKey}:{linkKey:string}) => {
        <Image
         height={30}
         width={30}
-        src={isCopied ? btnAfterCopy : copy}
+        src={isCopied ? afterCopyIcon : beforeCopyIcon}
         alt='Copy'
        />
       </button>
@@ -37,5 +37,3 @@ const CopyButton = ({linkKey}:{linkKey:string}) => {
 }
 
 export default CopyButton
-
-
