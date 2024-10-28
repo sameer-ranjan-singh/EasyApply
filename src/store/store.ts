@@ -2,12 +2,14 @@ import {configureStore} from "@reduxjs/toolkit"
 import userReducer  from "./slices/user/userSlice"
 import linkReducer from "./slices/link/linkSlice"
 import userConfigReducer from "./slices/config/userConfigSlice"
+import themeSliceReducer from "./slices/theme/themeSlice"
 
 export const store = configureStore({
     reducer :{
         user : userReducer,
         link : linkReducer,
-        userConfig : userConfigReducer
+        userConfig : userConfigReducer,
+        theme : themeSliceReducer
     }
 })
 

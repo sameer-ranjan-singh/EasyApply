@@ -16,7 +16,7 @@ export function ToggleMySession(){
       userSession = undefined
       signOut({redirectTo:"/"})
     }
-
+//bug to fix : userlogged needs to be dipatched to be changed , cant use it like a variable to change the state.
     if(userLoggedIn){
       userLoggedIn = false
       userSession = undefined

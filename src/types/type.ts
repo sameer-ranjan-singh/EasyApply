@@ -27,3 +27,7 @@ export interface linkInterface {
     discord?: string,
     reddit?: string
 }
+
+export interface themeInterface {
+    themeNow : string
+}

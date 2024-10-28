@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const linkStore = useAppSelector((store)=> store.link)
   const nameInStore = useAppSelector((store) => store.userConfig?.userSession?.name)
   const [links, setLink] = useState<linkInterface>(linkStore)
+  const theme = useAppSelector((store) => store.theme.themeNow )
   
   const fillStoreUsingSession = ()=> {
     if(session?.user?.name ){
