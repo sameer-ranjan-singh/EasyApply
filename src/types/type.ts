@@ -1,3 +1,5 @@
+import { type } from "os"
+
 export type Inputs = {
     Github?: string
     Twitter? : string
@@ -17,8 +19,8 @@ export interface  userInterface {
 
 
 export interface linkInterface {
-    id?: string,
-    userID?: string
+    id?: Number
+    userID?: Number
     portfolio?: string,
     twitter?: string,
     github?:  string ,
@@ -30,4 +32,13 @@ export interface linkInterface {
 
 export interface themeInterface {
     themeNow : string
+    // options: themeOptionsInterface
+}
+ export interface themeOptionsInterface {
+        light:string
+        dark?:string
+        light1?:string
+        dark1?:string
+        dark2?:string
+        dark3?:string
 }

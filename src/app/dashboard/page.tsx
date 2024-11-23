@@ -59,7 +59,7 @@ const shouldIncludeKeys = (linkKey: string)=> {
                 <>
                   <div
                     key={linkKey}
-                    className=" border border-black-700 mx-4 md:m-0 p-2 flex justify-between items-center rounded-md bg-none"
+                    className={`border border-${theme}-border mx-4 md:m-0 p-2 flex justify-between items-center rounded-md bg-none`}
                   >
                     <SocialIcon
                       linkKey={linkKey}
@@ -71,7 +71,7 @@ const shouldIncludeKeys = (linkKey: string)=> {
                       onChange={(event) =>
                         handleOnChange(linkKey as keyof typeof linkStore, event)
                       }
-                      className="p-1 md:p-2 bg-transparent text-sm md:text-lg font-mono text-black w-full focus:outline-none"
+                      className={`text-${theme}-text p-1 md:p-2 bg-transparent text-sm md:text-lg font-mono text-black w-full focus:outline-none`}
                     />
 
                     {linkStore[linkKey as keyof typeof linkStore] == "" ? (
