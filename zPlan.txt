@@ -1,0 +1,111 @@
+## dashboard :
+1.Make LinkBox + LinkCopybtn/Save button
+- if link available in store( link !== ""), show copy btn - else show save button
+- if new linkBox filled by user , automatically save after 3 seconds or if user wants to save by himself ,let him save
+
+2.handlSaveBtn -
+ - dispatch to store and POST to backend/database
+ 
+3.If x links available , show x+3 linkBox :
+- Total boxes should be 4 only, then users can click on showMore to get Total links list if available
+
+##SocialIcon
+if linkValue == "", show Black Icon
+
+nav-bg-red-1 : #e63946
+user-bg-white-1: f1faee
+user-blue-deepBlue-1 : #1d3557
+user-blue-mediumBlue-1 : #457b9d
+user-blue-lightBlue-1 : #a8dadc
+
+nav-bg-red-2 : #e63946
+user-bg-white-2: f1faee
+user-blue-deep-2 : #1d3557
+user-blue-medium-2 : #457b9d
+user-blue-low-2 : #a8dadc
+
+light:{
+    bg-{theme}:
+    text-{theme}:
+    border-{theme}:
+    font-{theme}:
+}
+dark:{
+    bg-{theme}:
+    text-{theme}:
+    border-{theme}:
+    font-{theme}:
+}
+
+
+// api
+-POST signup: 
+Validation and bcrypt/jwt + create a user in NeonDB + return userData
+
+-POST login: 
+check if user exist + Validation and bcrypt/jwt + return userData
+
+-POST saveLink
+save link to the DB
+
+-PUT edit link
+
+
+//pivot Idea
+1. Make a paltform where people like harkirat come and check 
+if the candidate is hirable at the moment or not.
+
+2. Hiring Managers can see the candidate profile and
+-(free) Give a feedback 
+-(free) Ignore
+-(paid) if the manager likes the profile, he can schedule an 1:1 to discuss further
+
+3. If the candidate wants,
+-(paid) he can pay money and schedule an 1:1
+to prove that he is ready for a job 
+-or wait till he gets a free call
+
+  const isThisEnough = {
+    earning: false,
+    portfolio :"https://sameeru.xyz",
+    interviewReady: true,
+    machineCoding: true,
+    dsa: false,
+    networking: false,
+    coldEmailing: false,
+    projects:{
+      selfMade:{
+        howMany:3,
+        areTheyDeployed:true,
+        links:{}
+      },
+      copiedCloneWithATweak:{
+        howMany : 2,
+        areTheyDeployed: true,
+        links:{}
+      }
+    },
+    stacks:{
+      list:{},
+      veryConfidentIn:{}
+    },
+    myBest:{
+      skills:{},
+      project:{}
+    },
+    openS:{
+      wantToContribute: true,
+      justStarted: true,
+      notInterested: true,
+    },
+    basics:{
+      theoryCS:true,
+      canSetupServer: true,
+      liveModifyYourCode: true,
+    }
+     
+  }
+  if(isThisEnough.earning){
+    return "still not getting any Interview: connect with me on a call"
+  }
+  return "What shouold i do more"
